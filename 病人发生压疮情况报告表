@@ -1,0 +1,164 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+<html>
+<head>
+<%@ include file="/WEB-INF/jsp/ipn/commonLink.jsp"%>
+<!-- 页面自定义样式 ,与打印样式并用-->
+<style type="text/css" id="ownCss" >
+ .blockT3{
+ float: none;}
+	
+</style>
+<!--留给PDA添加额外样式 -->
+<style type="text/css" >
+	.checkT {
+		white-space: nowrap;
+		font-weight: normal;
+		float: none;
+		text-align: left;
+	}
+	.checkTA {
+		font-weight: normal;
+		margin-right: 7px;
+		float: none;
+		white-space: normal;
+		text-align: left;
+	}
+	
+	.checkTCA {
+		font-weight: normal;
+		margin-right: 7px;
+		float: none;
+		text-align: left;
+	}
+</style>
+
+<script type="text/javascript">
+	var basePath = "<%=basePath%>" ;
+	
+</script> 
+</head>
+<body> 
+
+<%@ include file="/templates/html/3f03ade200020f7d4b1c.html"%> 
+<a   class="easyui-linkbutton" style="width: 180px;height: 20px;font-size: 20px;line-height:40px ;" iconCls="icon-ok"  onclick="continueToFillIn()" >继续填写首次护理评估单</a>
+<div id="main" class="record" align="left" style="text-align: left;">
+<form id="formDate" method="post" >
+<%@ include file="/WEB-INF/jsp/ipn/commonInput2.jsp"%>
+ 
+		<div>
+			<div style="text-align: center;top: 1em;">
+				<font style="font-size: 25px;font-weight: bold;">病人发生压疮情况报告表</font>
+				
+			</div>
+			
+		</div>
+		<div>
+			<span class="blockT3">
+					科室： <input type="text" name="col001" class="InputBottomLine"  style="width: 150px;" id="col001" value="${ipiReg.deptId}" />
+			</span>
+			<span class="blockT3">
+					床号：<input type="text" name="col002"  id="col002" class="InputBottomLine"  style="width: 70px;" value="${ipiReg.bedNo}" />
+			</span>
+			<span class="blockT3">
+					住院号： <input type="text" name="col003" class="InputBottomLine"  style="width: 150px;" id="col003" value="${ipiReg.ipiRegistrationNo}" />
+			
+			</span>
+		</div>
+		<table class="ownTable ownTable2"  cellspacing="0"   cellpadding="1" rules="all" bordercolor="black" border="1">
+			<tr>
+				<td>
+					姓名：<input type="text" name="patientName"  class="InputBottomLine"  style="width: 100px;" id="patientName" value="${ipiReg.patientName}${opcReg.patientName}${pemCust.custName}" />
+					性别：<input type="text" name="col004"  id="col004" class="InputBottomLine"  style="width: 70px;" value="${ipiReg.getSXbDm()}" />
+					年龄：<input type="text" name="col005"  id="col005" class="InputBottomLine"  style="width: 70px;" value="${ipiReg.age}" />
+					入院时间：<input type="text" name="col006"  id="col006" class="InputBottomLine"  style="width: 150px;" value="<fmt:formatDate value="${ipiReg.firstInsectionDate}" pattern="yyyy-MM-dd"/> <fmt:formatDate value="${ipiReg.firstInsectionDate}" pattern="HH:mm:ss"/>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					诊断(注明卧床时间) ：<input type="text" name="col007" class="InputBottomLine"  style="width: 200px;" id="col007" value="${disease}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="blockT3">压疮的描述：</span>
+					<span id = "ref_col008"></span>
+					<div style="clear: both;"></div>
+					<span class="blockT3">
+						压疮的范围：长（<input type="text" name="col010"  id="col010" class="InputBottomLine"  style="width: 70px;"  />）
+						cm&times;
+						宽（<input type="text" name="col011"  id="col011" class="InputBottomLine"  style="width: 70px;"  />）
+						cm&times;
+						高（<input type="text" name="col012"  id="col012" class="InputBottomLine"  style="width: 70px;"  />）cm
+					</span>
+					<span class="blockT3">
+						压疮分级：
+					</span>
+					<span id = "ref_col013"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					院外带入(请注明医疗单位级别或在家)：
+					<input type="text" name="col016"  id = "col016" class="InputBottomLine"  style="width: 150px;" />
+					发现时间：<input id="col017" name="col017" style="width:130px" 
+									class="easyui-datebox"
+									data-options="editable:false">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					接诊检查者：<input type="text" name="col018"  id = "col018" class="InputBottomLine"  style="width: 150px;" />
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					院内发生：<input type="text" name="col019"  id = "col019" class="InputBottomLine"  style="width: 150px;" />
+					发生时间：<input id="col020" name="col020" style="width:130px" 
+									class="easyui-datebox"
+									data-options="editable:false">
+					发现人：<input type="text" name="col021"  id = "col021" class="InputBottomLine"  style="width: 90px;" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div style="height: 4em;">病区护士检查情况及处理意见：<br/>
+					<textarea name="col022" id = "col022" class="cleanTextarea" style="width: 98%;max-width: 98%;"></textarea></div>
+					护士长签名:<input type="text" name="col023"  id = "col023" class="InputBottomLine"  style="width: 90px;" />
+					<input id="col024"   name = "col024" style="width:130px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div style="height: 4em;">科护士长检查情况及处理意见：<br/>
+					<textarea name="col025" id = "col025" class="cleanTextarea" style="width: 98%;max-width: 98%;"></textarea>
+					</div>
+					检查者签名:<input type="text" name="col026"  id = "col026" class="InputBottomLine"  style="width: 90px;" />
+					<input id="col027"   name = "col027" style="width:130px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					压疮转归（愈合情况及时间、未愈出院或其他），请护士长追踪。
+					<textarea name="col028" id = "col028" class="cleanTextarea" style="width: 98%;max-width: 98%;"></textarea>
+				</td>
+			</tr>
+		</table>
+		<div align="left">
+			注：发现压疮（含院外带入）须在24小时内填好上报护理部，护理部到现场检查处理，有不易治愈压疮（或面积大于5&times;5以上的二度以上的压疮），护理部组织会诊处理。
+		</div>
+	 </form>
+	 </div>
+</body>
+</html>
+
+
+
+		
