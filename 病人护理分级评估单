@@ -1,0 +1,1613 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+<html>
+<head>
+<%@ include file="/WEB-INF/jsp/ipn/commonLink.jsp"%>
+<!-- 页面自定义样式 ,与打印样式并用-->
+<style type="text/css" id="ownCss" >
+	.ownTable2 .InputBottomLine{
+	border-bottom-style: none;}
+	.boldd{
+	font-weight: bold;}
+	*,.InputBottomLine,.textbox {
+	font-size:10.5pt;
+	}
+	#main *,.InputBottomLine,.textbox {
+	font-size:9pt;
+	}
+</style>
+<!--留给PDA添加额外样式 -->
+<style type="text/css" id="PdaCss">
+	
+</style>
+
+<script type="text/javascript">
+var basePath = "<%=basePath%>" ;
+ function  lastDeal(){
+	var arr = [$("#col011"),$("#col012"),$("#col013"),$("#col014"),$("#col015"),$("#col016")]; 
+	var $eleArr = [$("#col191"),$("#col192"),$("#col193"),$("#col194"),$("#col195"),$("#col196")]; 
+	var $eleArr2 = [$("#col197"),$("#col198"),$("#col199"),$("#col200"),$("#col201"),$("#col202")]; 
+	var $eleArrAll = new Array();
+	
+	for(var i = 0 ;i < $eleArr2.length; i++){
+		var $eleArrAll001 = new Array();
+		 $eleArrAll001[0]=$eleArr2[i];
+		 
+		 
+		for(var j = 0; j < 3;j++){
+			var id = $eleArr2[i].attr("id");
+			 id = id.substring(3);
+			 id = Number(id);
+			id+= (6*(j+1));
+			var col="";
+		 if(id<=9){
+			 col="col00"+id;
+		 }
+		 if(id<=99 && id > 9){
+			 col="col0"+ id;
+		 }
+		 if(id > 99){
+			 col="col"+id;
+		 }
+			$eleArrAll001[j+1] = $("#"+col);
+			
+		}
+		 $eleArrAll[i] = $eleArrAll001;
+		 
+	}
+	
+	//31  30
+	for(var i = 0 ;i < arr.length; i++){
+		var arrTem = new Array();
+		arrTem[0]=arr[i];
+		for(var j = 0; j <29;j++){
+			 var id = arr[i].attr("id");
+		 id = id.substring(3);
+		 id = Number(id);
+		 id+= (6*(j+1));
+		 var col="";
+		 if(id<=9){
+			 col="col00"+id;
+		 }
+		 if(id<=99 && id > 9){
+			 col="col0"+ id;
+		 }
+		 if(id > 99){
+			 col="col"+id;
+		 }
+		 arrTem[j+1]=$("#"+col);
+		 
+		}
+		
+		for(var j = 0 ; j < arrTem.length ; j ++){
+			arrTem[j].data("data",arrTem);
+			arrTem[j].data("sumEle",$eleArr[i]);
+			arrTem[j].data("checkArr",$eleArrAll[i]);
+			arrTem[j].blur(function(){
+				var sum =0;
+				var arr = $(this).data("data");
+				for(var k = 0 ; k < arr.length;k++ ){
+					var  num = Number(arr[k].val());
+					sum+=num;
+				}
+				var val001 = $(this).data("sumEle");
+				val001.val(sum);
+				var checkArr = $(this).data("checkArr");
+				for(var l = 0 ; l < checkArr.length; l++){
+					checkArr[l].prop("checked",false);
+				}
+				if( sum<= 40 ){
+					
+					checkArr[0].prop("checked",true);
+					
+				}
+				if(sum > 40 && sum <=60){
+					checkArr[1].prop("checked",true);
+				}
+				if(sum > 60 && sum< 100){
+					checkArr[2].prop("checked",true);
+				}
+				if( sum == 100){
+					checkArr[3].prop("checked",true);
+				}
+				
+			});
+		}
+	}
+	
+	
+ 
+ 
+ }
+ function setPrintMode(LODOP){
+		LODOP.SET_PRINT_MODE("PRINT_DUPLEX",2);
+	}
+ function ckPrintBack(){
+	 var LODOP=getLodop(document.getElementById('LODOP'),document.getElementById('LODOP_EM'));
+		var strStyleCSS="<link href='"+basePath+"css/printView.css' type='text/css' rel='stylesheet'>";
+		var strBodyStyle = document.getElementById("ownCss") ;
+		if (strBodyStyle != null) {
+			strStyleCSS= strStyleCSS + "<style>"+strBodyStyle.innerHTML+"</style>";
+		}
+		//做某些事
+		try{
+			printExtend_s();
+		}catch (e) {
+			
+		}
+		try{
+			setPrintMode(LODOP);
+		}catch (e) {
+			
+		}
+		var mainDoc =document.getElementById("fu");
+		if(mainDoc ==null){
+				return;
+			}
+		var outerHTM = 	mainDoc.outerHTML;
+		var $textarea = $("#main").find("textarea");
+		var $select = $("#main").find("select");
+		if($("#justForTemp").length == 0){
+			$("body").append($("<div id=\"justForTemp\"></div>"));
+		}
+		$("#justForTemp").html(outerHTM);
+		$("#justForTemp").find("textarea").each(function(index,ele){
+			$(this).replaceWith($textarea.eq(index).val());
+			
+		});
+		var $ele = $("#justForTemp").find("div[id^='Bs_LimitedTextarea']").parent("div");
+		if($ele.length > 0){
+			$ele.remove();
+		}
+		$("#justForTemp").find("select").each(function(index,ele){
+			$(this).replaceWith($select.eq(index).find("option:selected").text());
+			
+		});
+		var htm = $("#justForTemp")[0].innerHTML;
+		$("#justForTemp").remove();
+		var mainDocContent=strStyleCSS+htm;
+		LODOP.PRINT_INITA(0,0,"210mm","297mm","");
+		
+		try{
+			//水印
+			watermark(LODOP);
+		}catch(e){
+		}
+		
+		try{
+		marginTop(LODOP,mainDocContent);
+		}catch(e){
+			LODOP.ADD_PRINT_HTM("0%","0%","100%","100%",mainDocContent);
+		}
+		var hengZong=1;
+		try{
+		kk_0130();
+		hengZong=2;
+		}catch(e){
+		}
+		LODOP.SET_PRINT_PAGESIZE(hengZong,0,0,"A4");
+		//LODOP.PREVIEW();
+	    LODOP.PRINT();//直接打印
+ }
+ function print(LODOP){
+	 LODOP.PRINT();
+ } 
+ function setRightWidth(LODOP,html){
+		LODOP.ADD_PRINT_HTM("0","0%","100%","100%",html);
+	}
+</script> 
+</head>
+<body> 
+
+<%@ include file="/templates/html/9ef71b64001e8cab8510.html"%>
+
+<a  class="easyui-linkbutton" style="width: 120px;height: 40px;font-size: 20px;line-height:40px ;"  iconCls="icon-print"  onclick="ckPrintBack()" >打印背面</a>
+<div>
+<form id="formDate" method="post" >
+<%@ include file="/WEB-INF/jsp/ipn/commonInput2.jsp"%>
+	<div id="main" class="record">
+		<div style="text-align: center;top: 1em;">
+							<div style="font-size: 15px;font-weight: bold;">
+								${organizationChineseName}病人护理分级评估单
+							</div>
+					
+		</div>
+		<div align="left"  >
+			姓名：<input type="text" name="patientName"  id="patientName" value="${patientName}"  class="InputBottomLine" style="width: 5em;">
+			床号：<input type="text" name="col001" value="${ipiReg.bedNo}" id = "col001" style="width: 3em;" 
+					class="InputBottomLine"> 
+			科室：<input type="text" name="col002" id = "col002" value="${ipiReg.getClinicGroupId().getDepartmentChineseName()}" style="width: 120px;" 
+					class="InputBottomLine"> 
+			住院号：<input type="text" name="col004" value="${ipiReg.ipiRegistrationNo}" id = "col004" style="width: 80px;" 
+					class="InputBottomLine"> 
+					<br>
+			诊断：<input type="text" name="col003" id = "col003" value="${admissionDisease}" style="width: 250px;text-align: left;" 
+					class="InputBottomLine">		
+					页数：<input type="text" name="col699"  id = "col699" style="width: 1em;" 
+					class="InputBottomLine"> 
+	   </div>
+	  <div style="clear: both;"> </div>
+	<table class="ownTable ownTable2" cellspacing="0"  style="table-layout: fixed;"  cellpadding="1" rules="all" bordercolor="black" border="1" 
+		    >
+		<col>
+		<col>
+		<col align="center">
+		<col align="center">
+		<col align="center">
+		<col align="center">
+		<col align="center">
+		<col align="center">
+		<col align="center">
+		<tr>
+			<td colspan="3">
+				Barthel指数评定量表（BI）
+			</td>
+			<td >
+				日期
+			</td>
+			<td >
+				日期
+			</td>
+			<td >
+				日期
+			</td>
+			<td >
+				日期
+			</td>
+			<td >
+				日期
+			</td>
+			<td >
+				日期
+			</td>
+		</tr>
+		<tr>
+			<td >
+				项目
+			</td>
+			<td >
+				  内容说明 
+			</td>
+			<td >
+				  分值
+			</td>
+			<td >
+				<input type="text" name="col005"  id="col005"   class="InputBottomLine" style="width: 2.4em;">
+			</td>
+			<td >
+				<input type="text" name="col006"  id="col006"   class="InputBottomLine" style="width: 2.4em;">
+			</td>
+			<td >
+				<input type="text" name="col007"  id="col007"   class="InputBottomLine" style="width: 2.4em;">
+			</td>
+			<td >
+				<input type="text" name="col008"  id="col008"   class="InputBottomLine" style="width: 2.4em;">
+			</td>
+			<td >
+				<input type="text" name="col009"  id="col009"   class="InputBottomLine" style="width: 2.4em;">
+			</td>
+			<td >
+				<input type="text" name="col010"  id="col010"   class="InputBottomLine" style="width: 2.4em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3">
+				进食<br>（10分）
+			</td>
+			<td >
+				完全独立
+			</td>
+			<td >
+				  10
+			</td>
+			<td >
+				<input type="text" name="col011"  id="col011"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col012"  id="col012"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col013"  id="col013"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col014"  id="col014"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col015"  id="col015"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col016"  id="col016"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		
+		<tr>
+			<td >
+				需部分帮助
+			</td>
+			<td >
+				  5
+			</td>
+			<td >
+				<input type="text" name="col017"  id="col017"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col018"  id="col018"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col019"  id="col019"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col020"  id="col020"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col021"  id="col021"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col022"  id="col022"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				需极大帮助
+			</td>
+			<td >
+				  0
+			</td>
+			<td >
+				<input type="text" name="col023"  id="col023"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col024"  id="col024"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col025"  id="col025"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col026"  id="col026"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col027"  id="col027"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col028"  id="col028"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="2" >
+				洗澡<br>（5分）
+			</td>
+			<td >
+				  完全独立
+			</td>
+			<td >
+				  5
+			</td>
+			<td >
+				<input type="text" name="col029"  id="col029"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col030"  id="col030"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col031"  id="col031"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col032"  id="col032"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col033"  id="col033"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col034"  id="col034"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需部分帮助
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col035"  id="col035"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col036"  id="col036"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col037"  id="col037"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col038"  id="col038"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col039"  id="col039"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col040"  id="col040"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="2">
+				  修饰<br>（5分）
+			</td>
+			<td >
+				 完全独立
+			</td>
+			<td >
+				 5
+			</td>
+			<td >
+				<input type="text" name="col041"  id="col041"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col042"  id="col042"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col043"  id="col043"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col044"  id="col044"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col045"  id="col045"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col046"  id="col046"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需部分帮助
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col047"  id="col047"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col048"  id="col048"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col049"  id="col049"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col050"  id="col050"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col051"  id="col051"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col052"  id="col052"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3">
+				  穿衣<br>（10分）
+			</td>
+			<td >
+				  完全独立
+			</td>
+			<td >
+				 10
+			</td>
+			<td >
+				<input type="text" name="col053"  id="col053"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col054"  id="col054"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col055"  id="col055"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col056"  id="col056"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col057"  id="col057"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col058"  id="col058"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需部分帮助
+			</td>
+			<td >
+				 5
+			</td>
+			<td >
+				<input type="text" name="col059"  id="col059"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col060"  id="col060"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col061"  id="col061"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col062"  id="col062"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col063"  id="col063"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col064"  id="col064"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需极大帮助
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col065"  id="col065"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col066"  id="col066"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col067"  id="col067"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col068"  id="col068"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col069"  id="col069"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col070"  id="col070"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3">
+				控制大便<br>（10分）
+			</td>
+			<td >
+				  完全独立
+			</td>
+			<td >
+				 10
+			</td>
+			<td >
+				<input type="text" name="col071"  id="col071"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col072"  id="col072"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col073"  id="col073"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col074"  id="col074"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col075"  id="col075"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col076"  id="col076"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需部分帮助
+			</td>
+			<td >
+				 5
+			</td>
+			<td >
+				<input type="text" name="col077"  id="col077"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col078"  id="col078"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col079"  id="col079"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col080"  id="col080"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col081"  id="col081"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col082"  id="col082"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需极大帮助
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col083"  id="col083"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col084"  id="col084"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col085"  id="col085"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col086"  id="col086"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col087"  id="col087"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col088"  id="col088"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3">
+				 控制小便<br>（10分）
+			</td>
+			<td >
+				  完全独立
+			</td>
+			<td >
+				 10
+			</td>
+			<td >
+				<input type="text" name="col089"  id="col089"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col090"  id="col090"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col091"  id="col091"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col092"  id="col092"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col093"  id="col093"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col094"  id="col094"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需部分帮助
+			</td>
+			<td >
+				 5
+			</td>
+			<td >
+				<input type="text" name="col095"  id="col095"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col096"  id="col096"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col097"  id="col097"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col098"  id="col098"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col099"  id="col099"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col100"  id="col100"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需极大帮助
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col101"  id="col101"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col102"  id="col102"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col103"  id="col103"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col104"  id="col104"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col105"  id="col105"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col106"  id="col106"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3">
+				 如厕<br>（10分）
+			</td>
+			<td >
+				  完全独立
+			</td>
+			<td >
+				 10
+			</td>
+			<td >
+				<input type="text" name="col107"  id="col107"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col108"  id="col108"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col109"  id="col109"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col110"  id="col110"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col111"  id="col111"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col112"  id="col112"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需部分帮助
+			</td>
+			<td >
+				 5
+			</td>
+			<td >
+				<input type="text" name="col113"  id="col113"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col114"  id="col114"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col115"  id="col115"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col116"  id="col116"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col117"  id="col117"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col118"  id="col118"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需极大帮助
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col119"  id="col119"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col120"  id="col120"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col121"  id="col121"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col122"  id="col122"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col123"  id="col123"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col124"  id="col124"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="4">
+				床椅转移<br>（15分）
+			</td>
+			<td >
+				  完全独立
+			</td>
+			<td >
+				 15
+			</td>
+			<td >
+				<input type="text" name="col125"  id="col125"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col126"  id="col126"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col127"  id="col127"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col128"  id="col128"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col129"  id="col129"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col130"  id="col130"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需部分帮助
+			</td>
+			<td >
+				 10
+			</td>
+			<td >
+				<input type="text" name="col131"  id="col131"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col132"  id="col132"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col133"  id="col133"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col134"  id="col134"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col135"  id="col135"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col136"  id="col136"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  需极大帮助
+			</td>
+			<td >
+				 5
+			</td>
+			<td >
+				<input type="text" name="col137"  id="col137"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col138"  id="col138"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col139"  id="col139"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col140"  id="col140"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col141"  id="col141"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col142"  id="col142"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+				  完全依赖
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col143"  id="col143"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col144"  id="col144"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col145"  id="col145"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col146"  id="col146"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col147"  id="col147"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col148"  id="col148"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="4">
+				  平地行走<br>（15分）
+			</td>
+			<td >
+				完全独立
+			</td>
+			<td >
+				 15
+			</td>
+			<td >
+				<input type="text" name="col149"  id="col149"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col150"  id="col150"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col151"  id="col151"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col152"  id="col152"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col153"  id="col153"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col154"  id="col154"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+			  	需部分帮助
+			</td>
+			<td >
+				 10
+			</td>
+			<td >
+				<input type="text" name="col155"  id="col155"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col156"  id="col156"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col157"  id="col157"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col158"  id="col158"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col159"  id="col159"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col160"  id="col160"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+			  	需极大帮助
+			</td>
+			<td >
+				 5
+			</td>
+			<td >
+				<input type="text" name="col161"  id="col161"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col162"  id="col162"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col163"  id="col163"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col164"  id="col164"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col165"  id="col165"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col166"  id="col166"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+			  	完全依赖
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col167"  id="col167"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col168"  id="col168"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col169"  id="col169"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col170"  id="col170"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col171"  id="col171"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col172"  id="col172"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3">
+			  	上下楼梯<br>（10分）
+			</td>
+			<td >
+			  	完全独立
+			</td>
+			<td >
+				 10
+			</td>
+			<td >
+				<input type="text" name="col173"  id="col173"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col174"  id="col174"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col175"  id="col175"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col176"  id="col176"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col177"  id="col177"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col178"  id="col178"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+			  	需部分帮助
+			</td>
+			<td >
+				 5
+			</td>
+			<td >
+				<input type="text" name="col179"  id="col179"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col180"  id="col180"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col181"  id="col181"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col182"  id="col182"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col183"  id="col183"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col184"  id="col184"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td >
+			  	需极大帮助
+			</td>
+			<td >
+				 0
+			</td>
+			<td >
+				<input type="text" name="col185"  id="col185"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col186"  id="col186"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col187"  id="col187"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col188"  id="col188"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col189"  id="col189"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col190"  id="col190"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" align="center">
+			  	总分
+			</td>
+			<td >
+				<input type="text" name="col191"  id="col191"  readonly="readonly" class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col192"  id="col192"   readonly="readonly"  class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col193"  id="col193"   readonly="readonly"  class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col194"  id="col194"  readonly="readonly"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col195"  id="col195"  readonly="readonly"   class="InputBottomLine" style="width: 2em;">
+			</td>
+			<td >
+				<input type="text" name="col196"  id="col196"  readonly="readonly"   class="InputBottomLine" style="width: 2em;">
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="4">
+				  自理能力<br>等级
+			</td>
+			<td colspan="2">
+				  重度依赖（&le;40分）
+			</td>
+			<td >
+				<input type="checkbox" name="col197"  id="col197"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col198"  id="col198"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col199"  id="col199"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col200"  id="col200"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col201"  id="col201"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col202"  id="col202"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				 中度依赖（60-41分）
+			</td>
+			<td >
+				<input type="checkbox" name="col203"  id="col203"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col204"  id="col204"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col205"  id="col205"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col206"  id="col206"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col207"  id="col207"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col208"  id="col208"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				 轻度依赖（61-99分）
+			</td>
+			<td >
+				<input type="checkbox" name="col209"  id="col209"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col210"  id="col210"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col211"  id="col211"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col212"  id="col212"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col213"  id="col213"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col214"  id="col214"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				 无需依赖（100分）
+			</td>
+			<td >
+				<input type="checkbox" name="col215"  id="col215"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col216"  id="col216"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col217"  id="col217"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col218"  id="col218"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col219"  id="col219"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col220"  id="col220"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3">
+				 病情等级
+			</td>
+			<td colspan="2">
+				 病危/病重
+			</td>
+			<td >
+				<input type="checkbox" name="col221"  id="col221"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col222"  id="col222"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col223"  id="col223"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col224"  id="col224"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col225"  id="col225"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col226"  id="col226"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				 病重/病情不稳
+			</td>
+			<td >
+				<input type="checkbox" name="col227"  id="col227"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col228"  id="col228"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col229"  id="col229"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col230"  id="col230"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col231"  id="col231"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col232"  id="col232"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				 病情稳定/康复期
+			</td>
+			<td >
+	
+  		<label for="col233" class="baiFenBai"><input type="checkbox" name="col233"  id="col233"  value="1"   >
+	  	</label>
+  	
+				
+			</td>
+			<td >
+				
+						<input type="checkbox" name="col234"  id="col234"   value="1"   >
+				
+			</td>
+			<td >
+				<input type="checkbox" name="col235"  id="col235"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col236"  id="col236"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col237"  id="col237"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col238"  id="col238"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="4">
+				 护理等级
+			</td>
+			<td colspan="2">
+				特级护理
+			</td>
+			<td >
+				<input type="checkbox" name="col239"  id="col239"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col240"  id="col240"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col241"  id="col241"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col242"  id="col242"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col243"  id="col243"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col244"  id="col244"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				一级护理
+			</td>
+			<td >
+				<input type="checkbox" name="col245"  id="col245"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col246"  id="col246"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col247"  id="col247"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col248"  id="col248"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col249"  id="col249"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col250"  id="col250"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				二级护理
+			</td>
+			<td >
+				<input type="checkbox" name="col251"  id="col251"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col252"  id="col252"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col253"  id="col253"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col254"  id="col254"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col255"  id="col255"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col256"  id="col256"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				三级护理
+			</td>
+			<td >
+				<input type="checkbox" name="col257"  id="col257"  value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col258"  id="col258"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col259"  id="col259"   value="1"    >
+			</td>
+			<td >
+				<input type="checkbox" name="col260"  id="col260"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col261"  id="col261"   value="1"   >
+			</td>
+			<td >
+				<input type="checkbox" name="col262"  id="col262"   value="1"   >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				责任护士签名
+			</td>
+			<td >
+				<input type="text" name="col263"   id="col263"   class="InputBottomLine" style="width: 3em;">
+			</td>
+			<td >
+				<input type="text" name="col264"   id="col264"   class="InputBottomLine" style="width: 3em;">
+			</td>
+			<td >
+				<input type="text" name="col265"   id="col265"   class="InputBottomLine" style="width: 3em;">
+			</td>
+			<td >
+				<input type="text" name="col266"   id="col266"   class="InputBottomLine" style="width: 3em;">
+			</td>
+			<td >
+				<input type="text" name="col267"   id="col267"   class="InputBottomLine" style="width: 3em;">
+			</td>
+			<td >
+				<input type="text" name="col268"  id="col268"   class="InputBottomLine" style="width: 3em;">
+			</td>
+		</tr>
+		</table>
+		<div align="left">
+			说明：入院后即定制护理等级 ，在相应内容中写上具体分值，根据病情和自理能力的变化动态调整护理等级
+		</div>
+		</div>
+	 </form>
+	 <div id="fu" class="fu record">
+	 	
+		<div style="font-size: 25px;font-weight: bold;" align="center">
+								${employee.hra00Department.hra00HealthServiveOrg.organizationChineseName}
+		</div>
+		<div style="font-size: 25px;font-weight: bold;" align="center">
+								分级护理依据
+		</div>
+		<div align="left">
+		<table >
+			<tr>
+				<td colspan="2">
+					<span class="boldd">
+						特级护理：
+					</span>
+					具有以下情况之一即可确定：
+				</td>
+			</tr>
+			<tr>
+				<td>
+					①
+				</td>
+				<td>
+					维持生命，实施抢救性治疗的重症监护患者；
+				</td>
+			</tr>
+			<tr>
+				<td>
+					②
+				</td>
+				<td>
+					病情危重，随时可能发生病情变化需要进行监护、抢救的患者；
+				</td>
+			</tr>
+			<tr>
+				<td>
+					③
+				</td>
+				<td>
+					各种复杂或者大手术后，严重创伤或大面积烧伤的患者。
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="boldd">
+						一级护理：
+					</span>
+					具有以下情况之一即可确定：
+				</td>
+			</tr>
+			<tr>
+				<td >
+					①
+				</td>
+				<td >
+					病情趋向稳定的重症患者；
+				</td>
+			</tr>
+			<tr>
+				<td >
+					②
+				</td>
+				<td >
+					病情不稳定或病情随时可能发生变化的患者；
+				</td>
+			</tr>
+			<tr>
+				<td >
+					③
+				</td>
+				<td >
+					手术后或者治疗期间需要严格卧床的患者；
+				</td>
+			</tr>
+			<tr>
+				<td >
+					④
+				</td>
+				<td >
+					自理能力重度依赖的患者。
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="boldd">二级护理：</span>具有以下情况之一即可确定：
+				</td>
+			</tr>
+			<tr>
+				<td >
+					①
+				</td>
+				<td >
+					病情趋于稳定或未明确诊断前，仍需观察，且自理能力轻度依赖的患者；
+				</td>
+			</tr>
+			<tr>
+				<td >
+					②
+				</td>
+				<td >
+					病情稳定，仍需卧床，且自理能力轻度依赖的患者；
+				</td>
+			</tr>
+			<tr>
+				<td >
+					③
+				</td>
+				<td >
+					病情稳定或处于康复期，且自理能力中度依赖的患者。
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="boldd">三 级护理：</span>
+					病情稳定或处于康复期，且自理能力轻度依赖或无需依赖的患者即可确定。
+				</td>
+			</tr>
+		</table>
+		<div align="center" style="font-size: 15px;font-weight: bold;">
+								Barthel指数量表评定细则
+		</div>
+		<div>
+			<span class="boldd">1、进食：</span>指用合适的餐具将食物由容器送到口中，包括用筷子、勺子取食物、对碗/碟的把持、咀嚼、吞咽等过程。
+		
+		</div>
+		<table>
+			<tr>
+				<td colspan="2">
+					10分：可独立进食（在合理的时间内独立进食准备好的食物）。
+				</td>
+			</tr>
+			<tr>
+				<td >
+					5分：需部分帮助（前述某个步骤需要一定帮助）。
+				</td>
+				<td >
+					0分：需极大帮助或完全依赖他人。
+				</td>
+			</tr>
+		</table>
+		<div>
+			<span class="boldd">2、洗澡：</span>
+		</div>
+		<table>
+			<tr>
+				<td >
+					5分：准备好洗澡水后，可自己独立完成。
+				</td>
+				<td >
+					0分：在洗澡过程中需要他人帮助。
+				</td>
+			</tr>
+		</table>
+		<div>
+			<span class="boldd">3、装饰：</span>包括洗脸、刷牙、梳头、刮脸等。<br/>
+			5分：可自己独立完成。 0分：需他人帮助。<br/>
+			<span class="boldd">4、穿衣：</span>包括穿/脱衣服、系扣子、拉拉链、穿/脱鞋袜、系鞋带等。<br/>
+			10分：可独立完成。<br/>
+			5分：需部分帮助（能自己穿脱，但需他人帮助整理衣物，系扣子、拉拉链、系鞋带等）。<br/>
+			<span class="boldd">5、大便控制：</span><br/>
+			10分：可控制大便。<br/>
+			5分：偶尔失控。 0分：完全失控。<br/>
+			<span class="boldd">6、小便控制：</span><br/>
+			10分：可控制小便。<br/>
+			5分：偶尔失控。 0分：完全失控。<br/>
+			<span class="boldd">7、如厕：</span>包括擦净、整理衣裤、冲水等过程。<br/>
+			10分：可独立完成。<br/>
+			5分：需部分帮助（需他人搀扶、需他人帮忙冲水或整理衣裤等）。 0分：需极大帮助或完全依赖他人。<br/>
+			<span class="boldd">8、床位转移：</span><br/>
+			15分：可独立完成。<br/>
+			10分：需部分帮助（需他人搀扶、或使用拐杖）。<br/>
+			5分：需极大帮助（较大程度上依赖他人搀扶或帮助）。 0分：完全依赖他人。<br/>
+			<span class="boldd">9、平地行走：</span><br/>
+			15分：可独立在平地上行走45m。<br/>
+			10分：需部分帮助（需他人搀扶，或使用拐杖，助行器等辅助工具）<br/>
+			5分：需极大帮助 （行走时较大程度上依赖他人搀扶，或坐在轮椅上自行在平地上移动）。0分：完全依赖他人。<br/>
+			<span class="boldd">10、上下楼梯：</span><br/>
+			10分：可独立上下楼梯。<br/>
+			5分：需部分帮助（需扶楼梯、他人搀扶，或使用拐杖等）。0分：需极大帮助或完全依赖他
+		</div>
+		</div>
+	 </div>
+</body>
+</html>
+
+
+
+		
