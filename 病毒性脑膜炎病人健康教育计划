@@ -1,0 +1,936 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+<html>
+<head>
+<%@ include file="/WEB-INF/jsp/ipn/commonLink.jsp"%>
+<!-- 页面自定义样式 ,与打印样式并用-->
+<style type="text/css" id="ownCss" >
+
+	td{
+	text-align: center;}
+	tr td:first-child{
+	text-align:left;
+	}
+</style>
+<!--留给PDA添加额外样式 -->
+<style type="text/css" id="PdaCss">
+</style>
+
+<script type="text/javascript">
+	var basePath = "<%=basePath%>" ;
+	
+</script> 
+</head>
+<body> 
+
+<%@ include file="/templates/html/f915cc9c00248cf30a24.html"%> 
+<div id="main" class="record">
+<form id="formDate" method="post" >
+<%@ include file="/WEB-INF/jsp/ipn/commonInput.jsp"%>
+
+		<div>
+			<div style="text-align: center;top: 1em;">
+				<font style="font-size: 25px;font-weight: bold;">病毒性脑膜炎病人健康教育计划</font>
+				
+			</div>
+			
+		</div>
+		<div>
+			<div class="blockT" style="margin-right: 1em;">
+					姓名<input type="text" name="patientName"  class="InputBottomLine"  style="width: 100px;" id="patientName" value="${ipiReg.patientName}${opcReg.patientName}${pemCust.custName}" />
+			</div>
+			<div class="blockT" style="margin-right: 1em;">
+					床号<input type="text" name="col001"  id="col001" class="InputBottomLine"  style="width: 70px;" value="${ipiReg.bedNo}" />
+			</div>
+			<div class="blockT" style="margin-right: 1em;">
+					诊断 <input type="text" name="col002" class="InputBottomLine"  style="width: 200px;" id="col002" value="${disease}" />
+			</div>
+			<div class="blockT" style="margin-right: 1em;">
+					病历号 <input type="text" name="col003" class="InputBottomLine"  style="width: 150px;" id="col003" value="${ipiReg.ipiRegistrationNo}" />
+			</div>
+			
+			
+			
+			
+			
+			<div style="clear: both;"></div>
+		</div>
+	
+	<table class="ownTable ownTable2" cellspacing="0" id = "ref_col007"  cellpadding="1" rules="all" bordercolor="gray" border="1" 
+		    ><!-- 22 * 13 -->
+ 		<tr>
+ 			<td rowspan="3">
+ 				      项目
+ 			</td>
+ 			<td rowspan="3">
+ 				日期
+ 				
+ 			</td>
+ 			<td colspan="4">
+ 				方   式
+ 			</td>
+ 			<td colspan="2">
+ 				对 象
+ 			</td>
+ 			<td colspan="4">
+ 				评    价
+ 			</td>
+ 			<td rowspan="3">
+ 				护士签名
+ 				
+ 			</td>
+ 			
+ 		</tr>
+ 		<tr>
+ 			<td rowspan="2">
+ 				讲解
+ 			</td>
+ 			<td rowspan="2">
+ 				书面
+ 			</td>
+ 			<td rowspan="2">
+ 				示范
+ 			</td>
+ 			<td rowspan="2">
+ 				录像
+ 			</td>
+ 			<td  rowspan="2">
+ 				病人
+ 			</td>
+ 			<td rowspan="2">
+ 				家属
+ 			</td>
+ 			<td colspan="2">
+ 				复述
+ 			</td>
+ 			
+ 			<td colspan="2">
+ 				回示
+ 				
+ 			</td>
+ 			
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				能
+ 			</td>
+ 			<td>
+ 				不能
+ 			</td>
+ 			<td>
+ 				能
+ 			</td>
+ 			<td>
+ 				不能
+ 			</td>
+ 			
+ 		</tr>
+ 		<tr>
+ 			<td style="text-align: left;">
+ 				入院介绍及分级护理
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10000"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10000" value = "0"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10001" value = "1"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10002" value = "2"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10003" value = "3"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10004" value = "4"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10005" value = "5"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10006" value = "6"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10007" value = "7"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10008" value = "8"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10009" value = "9"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10000"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				保持病室环境整洁、安静的重要性
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10001"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10010" value = "10"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10011" value = "11"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10012" value = "12"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10013" value = "13"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10014" value = "14"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10015" value = "15"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10016" value = "16"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10017" value = "17"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10018" value = "18"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10019" value = "19"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10001"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				讲解有关检查的目的及注意事项
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10002"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10020" value = "20"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10021" value = "21"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10022" value = "22"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10023" value = "23"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10024" value = "24"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10025" value = "25"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10026" value = "26"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10027" value = "27"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10028" value = "28"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10029" value = "29"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10002"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				讲解药物的作用、方法、注意事项
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10003"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10030" value = "30"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10031" value = "31"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10032" value = "32"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10033" value = "33"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10034" value = "34"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10035" value = "35"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10036" value = "36"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10037" value = "37"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10038" value = "38"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10039" value = "39"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10003"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				病毒性脑炎的病因 
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10004"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10040" value = "40"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10041" value = "41"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10042" value = "42"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10043" value = "43"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10044" value = "44"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10045" value = "45"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10046" value = "46"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10047" value = "47"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10048" value = "48"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10049" value = "49"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10004"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				头痛观察的要点
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10005"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10050" value = "50"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10051" value = "51"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10052" value = "52"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10053" value = "53"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10054" value = "54"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10055" value = "55"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10056" value = "56"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10057" value = "57"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10058" value = "58"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10059" value = "59"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10005"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				讲解激素治疗的有关知识
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10006"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10060" value = "60"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10061" value = "61"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10062" value = "62"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10063" value = "63"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10064" value = "64"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10065" value = "65"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10066" value = "66"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10067" value = "67"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10068" value = "68"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10069" value = "69"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10006"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				休息、活动指导
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10007"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10070" value = "70"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10071" value = "71"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10072" value = "72"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10073" value = "73"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10074" value = "74"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10075" value = "75"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10076" value = "76"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10077" value = "77"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10078" value = "78"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10079" value = "79"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10007"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				讲解合理饮食的重要性及方法
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10008"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10080" value = "80"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10081" value = "81"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10082" value = "82"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10083" value = "83"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10084" value = "84"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10085" value = "85"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10086" value = "86"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10087" value = "87"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10088" value = "88"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10089" value = "89"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10008"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				指导口腔及皮肤护理
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10009"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10090" value = "90"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10091" value = "91"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10092" value = "92"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10093" value = "93"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10094" value = "94"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10095" value = "95"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10096" value = "96"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10097" value = "97"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10098" value = "98"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10099" value = "99"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10009"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				讲解保持情绪稳定的意义
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10010"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10100" value = "100"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10101" value = "101"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10102" value = "102"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10103" value = "103"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10104" value = "104"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10105" value = "105"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10106" value = "106"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10107" value = "107"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10108" value = "108"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10109" value = "109"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10010"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				讲解腰椎穿刺的目的及注意事项
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10011"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10110" value = "110"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10111" value = "111"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10112" value = "112"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10113" value = "113"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10114" value = "114"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10115" value = "115"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10116" value = "116"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10117" value = "117"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10118" value = "118"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10119" value = "119"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10011"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				讲解复查复查腰穿的目的
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10012"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10120" value = "120"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10121" value = "121"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10122" value = "122"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10123" value = "123"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10124" value = "124"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10125" value = "125"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10126" value = "126"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10127" value = "127"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10128" value = "128"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10129" value = "129"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10012"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				心理护理
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10013"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10130" value = "130"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10131" value = "131"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10132" value = "132"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10133" value = "133"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10134" value = "134"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10135" value = "135"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10136" value = "136"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10137" value = "137"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10138" value = "138"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10139" value = "139"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10013"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				伴精神症状的护理
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10014"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10140" value = "140"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10141" value = "141"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10142" value = "142"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10143" value = "143"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10144" value = "144"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10145" value = "145"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10146" value = "146"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10147" value = "147"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10148" value = "148"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10149" value = "149"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10014"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				预防措施
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10015"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10150" value = "150"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10151" value = "151"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10152" value = "152"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10153" value = "153"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10154" value = "154"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10155" value = "155"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10156" value = "156"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10157" value = "157"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10158" value = "158"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10159" value = "159"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10015"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				定期复查脑电图的重要性
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10016"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10160" value = "160"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10161" value = "161"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10162" value = "162"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10163" value = "163"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10164" value = "164"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10165" value = "165"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10166" value = "166"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10167" value = "167"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10168" value = "168"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10169" value = "169"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10016"  />
+ 			</td>
+ 		</tr>
+ 		<tr>
+ 			<td>
+ 				出院指导
+ 			</td>
+ 			<td>
+ 				<input id="ref_col004_10017"  style="width:100px" 
+									class="easyui-datebox"
+									data-options="editable:false"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10170" value = "170"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10171" value = "171"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10172" value = "172"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10173" value = "173"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10174" value = "174"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10175" value = "175"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10176" value = "176"/>
+ 				
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10177" value = "177"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10178" value = "178"/>
+ 			</td>
+ 			<td>
+ 				<input type= "checkbox"  id = "ref_col007_10179" value = "179"/>
+ 			</td>
+ 			<td>
+ 				<input type="text"  class="InputBottomLine"  style="width: 80px;" id="ref_col006_10017"  />
+ 			</td>
+ 		</tr>
+ 		
+ 	</table>
+ 		
+ 		
+ 		
+ 	
+ 	 </table>
+	 </form>
+	 </div>
+</body>
+</html>
+
+
+
+		
