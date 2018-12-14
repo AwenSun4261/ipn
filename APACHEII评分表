@@ -1,0 +1,496 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>危重病APACHEII评分系统表</title>
+<%@ include file="/WEB-INF/jsp/ipn/commonLink.jsp"%>
+<!-- 页面自定义样式 ,与打印样式并用-->
+<style type="text/css" id="ownCss">
+ table .InputBottomLine {
+/* 	border-bottom-style: none;
+	width: 99%;
+	max-width: 99%; */
+}
+
+	table tr td {
+		padding: 0px;
+	}
+	.myclas2 {
+		width: 100%;
+	}
+	* {
+		font-size: 12px;
+	}
+	p {
+		margin: 0;
+	}
+</style>
+<!-- 页面自定义样式 ,不与打印样式并用-->
+<style type="text/css">
+</style>
+<!--留给PDA添加额外样式 -->
+<style type="text/css" id="PdaCss"></style>
+
+<script type="text/javascript">
+	var basePath = "<%=basePath%>";
+	$(function() {
+		setHiddenFieldForCheckBox();
+		$("table input[type='checkbox']").click(function(){
+			selectOnlyOne($(this));
+			jf($(this).parents("table"));
+		});
+	});
+	//本页的验证
+	function othervValidate2() {
+	}
+	/*
+	 * 由于没有选中 的 checkbox 在提交时不会传值，所以给其设置一个同名的隐藏域用于传值
+	 */
+	function setHiddenFieldForCheckBox() {
+		$("td input[type='checkbox']").each(function(){
+			var hiddenFieldHtml = "<input type='hidden' name='"
+				+ $(this).attr("name") + "' "
+				+ "value='" + ($(this).prop("checked") ? $(this).val() : "") + "' "
+				+ "/>";
+				
+			$(this).after(hiddenFieldHtml);
+			$(this).removeAttr("name");
+			$(this).click(function(){
+				if($(this).prop("checked")){
+					$(this).next().val($(this).val());
+				} else {
+					$(this).next().val("");
+				}
+			});
+		});
+	}
+	//设置打印时的边距
+	function marginTop(LODOP,mainDocContent){
+		LODOP.ADD_PRINT_HTM("0.5cm","0.5cm","RightMargin:0.5cm","BottomMargin:0.5cm",mainDocContent);
+	}
+	//控制每个 tr 的 checkbox 单选
+	function selectOnlyOne($ckb) {
+		var selfChecked = $ckb.prop("checked");
+		$ckb.parents("tr").find("input[type='checkbox']").prop("checked", false);
+		$ckb.parents("tr").find("input[type='hidden']").not($ckb.next("input[type='hidden']")).val("");
+		$ckb.prop("checked", selfChecked);
+	}
+	//计分
+	function jf($table) {
+		var sum = 0;
+		$table.find("input[type='checkbox']").each(function(){
+			if ($(this).prop("checked")) {
+				sum += parseInt($(this).val());
+			}
+		});
+		var $jf = $table.find(".ajf,.bjf,.cjf,.djf");
+		$jf.val(sum);
+		if ($jf.hasClass("cjf")) {
+			$jf.val(15-$jf.val());
+		}
+		sum = 0;
+		$(".ajf,.bjf,.cjf,.djf").each(function(){
+			var f = parseInt($.trim($(this).val()));
+			if (!isNaN(f)) {
+				sum += f;
+			}
+		});
+		$(".zjf").val(sum);
+	}
+</script>
+</head>
+<body>
+	<%@ include file="/templates/html/c4259bf0000078bd0fc0.html"%>
+	<form id="formDate" method="post">
+	<%@ include file="/WEB-INF/jsp/ipn/commonInput.jsp"%>
+	
+		<!-- 表单 -->
+		<div id="main" class="record">
+			<div>
+				<div style="text-align: center;top: 1em;">
+					<font style="font-size: 20px;font-weight: bold;">
+						${organizationChineseName }<br>
+					</font>
+				</div>
+				<div style="text-align: center;top: 1em;">
+					<font style="font-size: 25px;font-weight: bold;">
+						${modelDef.topicTitle}
+					</font>
+				</div>
+			</div>
+			<div>
+				<span>
+					<label>姓名</label>
+					<input style="width: 5em;" type="text" id="patientName" name="patientName" class="InputBottomLine" value="${patientName}"/>
+				</span>
+				<span style="margin-left: 50px;">
+					<label>科室</label>
+					<input style="width: 10em;" type="text" id="col008" name="col008" class="InputBottomLine" value="${deptId}"/>
+				</span>
+				<span style="margin-left: 50px;">
+					<label>床号</label>
+					<input style="width: 6em;" type="text" id="col001" name="col001" class="InputBottomLine" value="${bedNo}"/>
+				</span>
+				<span style="margin-left: 50px;">
+					<label>住院号</label>
+					<input style="width: 6em;" type="text" id="col004" name="col004" class="InputBottomLine" value="${ipiReg.ipiRegistrationNo}"/>
+				</span>
+			</div>
+			<div>
+				<% int col = 100; %>
+				<table class="ownTable ownTable2 mainT" style="table-layout: fixed;margin-top: 1em;" cellspacing="0" cellpadding="1" rules="all" bordercolor="black" border="1" >
+					<col width="10%">
+					<col width="70%">
+					<col width="20%">
+					<tr style="text-align: center;">
+						<td>
+							<label>A.年龄</label>
+						</td>
+						<td>
+							<span>
+								<label>≤44</label>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="0"/>
+								<label>0;</label>
+							</span>
+							<span style="margin-left: 2em;">
+								<label>44-54</label>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="2"/>
+								<label>2;</label>
+							</span>
+							<span style="margin-left: 2em;">
+								<label>55-64</label>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="3"/>
+								<label>3;</label>
+							</span>
+							<span style="margin-left: 2em;">
+								<label>65-74</label>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="5"/>
+								<label>5;</label>
+							</span>
+							<span style="margin-left: 2em;">
+								<label>≥75</label>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="6"/>
+								<label>6;</label>
+							</span>
+						</td>
+						<td>
+							<label>A计分：</label>
+							<input style="width: 2em;" type="text" id="col<%=col%>" name="col<%=col++%>" class="InputBottomLine ajf"/>
+						</td>
+					</tr>
+				</table>
+				<table class="ownTable ownTable2 mainT" style="table-layout: fixed;margin-top: 1em;" cellspacing="0" cellpadding="1" rules="all" bordercolor="black" border="1" >
+					<col width="28%">
+					<col width="57%">
+					<col width="15%">
+					<tr style="text-align: center;">
+						<td>
+							<label>B.有误严重器官功能不全或免疫损害</label>
+						</td>
+						<td>
+							<span>
+								<label>非手术或择期手术后</label>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="2"/>
+								<label>2;</label>
+							</span>
+							<span>
+								<label>不能手术或急诊手术后</label>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="5"/>
+								<label>5;</label>
+							</span>
+							<span>
+								<label>无上诉情况</label>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="0"/>
+								<label>0;</label>
+							</span>
+						</td>
+						<td>
+							<label>B计分：</label>
+							<input style="width: 2em;" type="text" id="col<%=col%>" name="col<%=col++%>" class="InputBottomLine bjf"/>
+						</td>
+					</tr>
+				</table>
+				<table class="ownTable ownTable2 mainT" style="table-layout: fixed;margin-top: 1em;" cellspacing="0" cellpadding="1" rules="all" bordercolor="black" border="1" >
+					<col width="14%">
+					<col width="14%">
+					<col width="14%">
+					<col width="14%">
+					<col width="15%">
+					<col width="15%">
+					<col width="14%">
+					<tr style="text-align: center;">
+						<td>
+							<label>C.GCS评分</label>
+						</td>
+						<td>
+							<label>6</label>
+						</td>
+						<td>
+							<label>5</label>
+						</td>
+						<td>
+							<label>4</label>
+						</td>
+						<td>
+							<label>3</label>
+						</td>
+						<td>
+							<label>2</label>
+						</td>
+						<td>
+							<label>1</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>1.睁眼反应</label>
+						</td>
+						<%String[] items1 = {"",
+								"",
+								"自动睁眼",
+								"呼唤睁眼",
+								"刺痛睁眼",
+								"不能睁眼"}; %>
+						<%for (int i=0; i<items1.length; i++) { %>
+						<td>
+							<%if (!items1[i].isEmpty()) { %>
+							<span>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="<%=6-i%>"/>
+								<label><%=items1[i] %></label>
+							</span>
+							<%} %>
+						</td>
+						<%} %>
+					</tr>
+					<tr>
+						<td>
+							<label>2.语言反应</label>
+						</td>
+						<%String[] items2 = {"",
+								"回答确切",
+								"回答不确切",
+								"答非所问",
+								"只能发音",
+								"不用言语"}; %>
+						<%for (int i=0; i<items2.length; i++) { %>
+						<td>
+							<%if (!items2[i].isEmpty()) { %>
+							<span>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="<%=6-i%>"/>
+								<label><%=items2[i] %></label>
+							</span>
+							<%} %>
+						</td>
+						<%} %>
+					</tr>
+					<tr>
+						<td>
+							<label>3.运动反应</label>
+						</td>
+						<%String[] items3 = {"按吩咐动作",
+								"刺痛能定位",
+								"刺痛能躲避",
+								"刺痛肢体屈曲",
+								"刺痛肢体伸展",
+								"不能活动"}; %>
+						<%for (int i=0; i<items3.length; i++) { %>
+						<td>
+							<%if (!items3[i].isEmpty()) { %>
+							<span>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="<%=6-i%>"/>
+								<label><%=items3[i] %></label>
+							</span>
+							<%} %>
+						</td>
+						<%} %>
+					</tr>
+					
+					<tr>
+						<td colspan="3" style="border: 0px;text-align: left;">
+							<span>
+								<label>GCS积分=1+2+3:</label>
+								<label></label>
+							</span>
+						</td>
+						<td colspan="3" style="border: 0px;text-align: left;">
+							<span>
+								<label>C.积分=15-GCS</label>
+								<label></label>
+							</span>
+						</td>
+						<td>
+							<span>
+								<label>C计分：</label>
+								<input style="width: 2em;" type="text" id="col<%=col%>" name="col<%=col++%>" class="InputBottomLine cjf"/>
+							</span>
+						</td>
+					</tr>
+				</table>
+				
+				<table class="ownTable ownTable2 mainT myclas1" style="table-layout: fixed; margin-top: 1em;" cellspacing="0" cellpadding="1" rules="all" bordercolor="black" border="1" >
+					<col width="14%">
+					<col width="8%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="8%">
+
+					<tr style="text-align: center;">
+						<td rowspan="2">
+							<label>D.生理指标</label>
+						</td>
+						<td colspan="9">
+							<label style="">分值</label>
+						</td>
+					</tr>
+					
+					<tr style="text-align: center;">
+						<% String[] fz = {"+4","+3","+2","+1","+0","+1","+2","+3","+4"}; %>
+						<%for (int i=0; i<fz.length; i++) { %>
+						<td>
+							<label><%=fz[i] %></label>
+						</td>
+						<%} %>
+					</tr>
+					
+					<%int[] fs = {4, 3, 2, 1, 0, 1, 2, 3, 4}; %>
+					<% String[][] items = {{"1.体温（腋下）","≥41","39-40.9","","38.5-28.9","36-38.4","34-35.9","32-33.9","30-31.9","≤29.9"},
+							{"2.平均血压（mmHg）","≥160","130-159","110-129","","70-109","","50-69","","≤49"},
+							{"3.心率（次/分）","≥180","140-179","110-139","","70-109","","55-69","40-54","≤39"},
+							{"4.呼吸频率（次/分）","≥50","35-49","","25-34","12-24","10-11","6-9","","≤5"},
+							{"5.Pa02(mmHg)<br>(Fio2<50%)<br>(A-aD02)<br>(Fi02>50%)","≥500","350-499","200-349","","70-200","61-70","","55-60","≤55"},
+							{"6.动脉血PH<br>血清HC03(mmlo/L)<br>(无血气时用)","≥7.7","7.6-7.69","","7.5-7.59","7.33-7.49","","7.25-7.32","7.15-7.24","<7.15"},
+							{"7.血清Na(mmol/L)","≥180","160-179","155-159","150-154","130-149","","120-129","111-119","≤110"},
+							{"8.血清K(mmol/L)","≥7","6-6.9","","5.5-5.9","3.5-5.4","3-3.4","2.5-2.9","","<2.5"},
+							{"9.血清肌酐(mg/dL)","≥3.5","2-3.4","1.5-1.9","","0.6-1.4","","<0.6","",""},
+							{"10.血球压积（%）","≥60","","50-59.9","46-49.9","30-45.9","","20-29.9","","<20"},
+							{"11.WBC(*1000)","≥40","","20-39","15-19.9","3-14.9","","1-2.9","","<1"}}; %>
+					<% String [] items6 = {"","≥52","41-51.9","","32-40","23-31.9","","18-21.9","15-17.9","<15"}; %>
+					<%for (int r=0; r<items.length; r++) { %>
+					<tr style="text-align: right;">
+						<td style="text-align: center;">
+							<label><%=items[r][0] %></label>
+						</td>
+						<%for (int c=1; c<=fs.length; c++) { %>
+						<td>
+							<%if (!items[r][c].isEmpty()) { %>
+							<span class="myclas2">
+								<span style="vertical-align: middle;"><%=items[r][c] %></span>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="<%=fs[c-1]%>" style="vertical-align: middle;"/>
+							</span>
+							<%} %>
+							<%if (r==5 && !items6[c].isEmpty()) { %>
+							<br>
+							<br>
+							<span class="myclas2">
+								<span style="vertical-align: middle;"><%=items6[c] %></span>
+								<input type="checkbox" id="col<%=col%>" name="col<%=col++%>" value="<%=fs[c-1]%>" style="vertical-align: middle;"/>
+							</span>
+							<%} %>
+							
+						</td>
+						<%} %>
+					</tr>
+					<%} %>
+					<tr>
+						<td colspan="10">
+							<span>
+								<label>D记分</label>
+								<input style="width: 6em;" type="text" id="col<%=col%>" name="col<%=col++%>" class="InputBottomLine djf"/>
+							</span>	
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<div style="text-align: left;width: 98%; margin: auto;">
+					<span>
+						<label>APACHE II 总积分=A+B+C+D</label>
+					</span>
+					
+					<span style="margin: 5em;">
+						<label>评分时间</label>
+						<input id="col<%=col%>" name="col<%=col++%>" class="InputBottomLine" style="width:150px;"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})" readonly/>
+					</span>
+					
+					<span style="margin: 3em;">
+						<label>APACHE II 总积分：</label>
+						<input type="text" id="col<%=col%>" name="col<%=col++%>" class="InputBottomLine zjf" style="width: 5em;"/>
+					</span>
+					<br>
+					<label>说明：</label>
+				</div>
+				<div style="text-align: left;">
+					<p>1.数据采集应为病人入ICU或抢救开始后24小时内最差值，并注明具体评分时间。</p>
+					<p>2.B项‘不能手术’应理解为由于病人病情危重二不能接受手术治疗。</p>
+					<div>
+						<span style="float: left;">
+							3.严重器官功能不全指：
+						</span>
+						<div style="float: left;">
+							(1)心：心功能IV级；（2）肺：慢性缺氧，阻塞性或限制性通气障碍，运动耐力差；（3）
+							肾：慢性透洗者（4）肝：肝硬化，门脉高压，有上消化道出血史，肝昏迷，肝功能衰竭史。
+						</div>
+						<div style="clear: both;"></div>
+					</div>
+					<p>4.免疫损害：如接受放疗、化疗、长期或大量激素治疗，有白血病、淋巴瘤、艾滋病等。</p>
+					<p>5.D项中的血压值应为平均动脉压= （收缩压+2*舒张压）/ 3，若有直接动脉压检测则记直接动脉压。</p>
+					<p>6.呼吸频率应记录病人的自主呼吸频率</p>
+					<p>7.如果病人是急性肾功能衰竭，则血清肌酐一项分值应在原基础上加倍（*2）</p>
+					<p>8.血清肌酐的单位是umol/L时，与mg/dL的对应值如下：</p>
+					<div style="width: 98%;margin: auto;">
+						<table style="table-layout: fixed; width: 50%; float: left; margin: 0px;">
+							<tr>
+								<td>
+									<span>mg/dL</span>
+								</td>
+								<td>
+									<span>3.5</span>
+								</td>
+								<td>
+									<span>2-3.4</span>
+								</td>
+								<td>
+									<span>1.5-1.9</span>
+								</td>
+								<td>
+									<span>0.6-1.4</span>
+								</td>
+								<td>
+									<span>0.6</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span>umol/L</span>
+								</td>
+								<td>
+									<span>305</span>
+								</td>
+								<td>
+									<span>172-304</span>
+								</td>
+								<td>
+									<span>128-171</span>
+								</td>
+								<td>
+									<span>53-127</span>
+								</td>
+								<td>
+									<span>53</span>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</form>
+</body>
+</html>
